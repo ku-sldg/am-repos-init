@@ -1,7 +1,7 @@
 # am-repos-init
 Initialization scripts for quick installation of am (Attestation Manager) repos (repositories) and their dependencies.
 
-## Quick install
+## Quick Install
 
 Dependencies:
 * Rust (https://www.rust-lang.org/tools/install)
@@ -18,7 +18,7 @@ Steps:
     ``` 
         sh ./configure.sh
     ```
-    This will clone 3 repositories (am-cakeml, asp-libs rust-am-clients) from the [ku-sldg](https://github.com/orgs/ku-sldg/repositories) github repositories and place them at `<path-to-am_repos_root>/(am-cakeml, asp-libs rust-am-clients)`.  It will also attempt to build asp-libs and rust-am-clients automatically -- these should succeed given a good Rust/cargo environment is present.
+    This will clone specific branches of 3 repositories (am-cakeml, asp-libs rust-am-clients) from the [ku-sldg](https://github.com/orgs/ku-sldg/repositories) github repositories and place them at `<path-to-am_repos_root>/(am-cakeml, asp-libs rust-am-clients)`.  It will also attempt to build asp-libs and rust-am-clients automatically -- these should succeed given a good Rust/cargo environment is present.
 1. Navigate to `<path-to-am_repos_root>/am-cakeml/` and follow the instructions in `README.md` to manually install the am-cakeml tools (and their dependencies).
 
 ## Quick Test
