@@ -37,5 +37,5 @@ cd $AM_CLIENTS_LOCAL_DIR && make
 
 echo ""
 echo ""
-echo "NEXT:  Proceed to $AM_CAKEML_LOCAL_DIR and follow build instructions in README.md"
+echo "NEXT STEP:  Proceed to $AM_CAKEML_LOCAL_DIR and follow build instructions in README.md"
 echo ""
