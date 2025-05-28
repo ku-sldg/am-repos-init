@@ -8,16 +8,18 @@ if [ -z ${AM_REPOS_ROOT+x} ]; then
   exit 1
 fi
 
+MAESTRO_BRANCH=maestro-summit
+
 AM_CAKEML_REPO_URL=https://github.com/ku-sldg/am-cakeml.git
-AM_CAKEML_BRANCH=copland-lib-pub-adts
+AM_CAKEML_BRANCH=$MAESTRO_BRANCH
 AM_CAKEML_LOCAL_DIR=$AM_REPOS_ROOT/am-cakeml
 
 ASP_LIBS_REPO_URL=https://github.com/ku-sldg/asp-libs.git
-ASP_LIBS_BRANCH=copland-lib-pub-adts
+ASP_LIBS_BRANCH=$MAESTRO_BRANCH
 ASP_LIBS_LOCAL_DIR=$AM_REPOS_ROOT/asp-libs
 
 AM_CLIENTS_REPO_URL=https://github.com/ku-sldg/rust-am-clients.git
-AM_CLIENTS_BRANCH=asp_args
+AM_CLIENTS_BRANCH=$MAESTRO_BRANCH
 AM_CLIENTS_LOCAL_DIR=$AM_REPOS_ROOT/rust-am-clients
 
 # clone am-cakeml
