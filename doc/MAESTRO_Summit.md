@@ -229,3 +229,25 @@ make am_client_cert_appr_appsumm
 ```
 
 An Appraisal Summary will walk the Copland evidence structure and look for the "good" evidence value (in this case the empty string "").  The output will end with a pretty-printed Appraisal Summary that prints "PASSED" if appraisal succeeds on each target.
+
+PRO TIP:  An alternative strategy for performing appraisal is to delegate appraisal to a dedicated AM server.  This leads to (effectively) running two separate attestation sessions in sequence as follows:
+
+```
+E <- (*P0[]:  
+         @P1 [ <attest P1 sys_targ> ->
+             @P2 [ <appraise P2 sys_targ> ->
+                   <certificate P2 sys_targ> ]
+             ]
+    ) ;;
+*P0[E]: <APPR>
+```
+
+Evidence from the `cert` phrase (executed at `P0`) is passed to the "appraisal server AM" (in this case, also `P0`) for appraisal.  The notation `*P0[E]:` means initiate a session with place `P0` with "initial evidence" `E`.  The evidence structure `E` contains both raw evidence and meta-evidence indicating how the evidence was collected (ASPs used, measurement targets, etc.).  NOTE:  the above syntax is still "pseudo-Copland" at the time of writing.
+
+To run the `cert` + `<APPR>` delegated appraisal (using the same server AMs as for `cert_appr`):
+
+```
+make am_client_cert_appr_delegated
+```
+
+This make target includes additional parameters to indicate the appraisal server AM (`-r`) and appraisal ASP_ARGS (`-d`).  ASP_ARGS provide a way to customize Copland protocols for specific measurement "targets" (we will see examples of this later in this tutorial).  Because the ASPs for `cert` are all "dummy" versions that produce static strings, its ASP_ARGS are simply the empty JSON object (`{}`) (both for its attestation AND appraisal ASPs -- recall that `magic_appr` is also a dummy implementation).
