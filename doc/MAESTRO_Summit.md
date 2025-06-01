@@ -61,3 +61,28 @@ Finally, looking at the fields for the Attestation Session (`Full_Session.json`)
 * `"PubKey_Mapping"` tells protocol participants how to map PLC_IDs to public key strings (used for cryptographic operations like checking signatures, encryption).
 
 ### cert protocol (local)
+
+Next, we'll move to a slightly more complex protocol scenario, albeit still local to one machine.  The Copland syntax for the `cert` protocol is as follows:
+
+```
+*P0:  
+    @P1 [ <attest P1 sys_targ> ->
+          @P2 [ <appraise P2 sys_targ> ->
+                <certificate P2 sys_targ> ]
+        ]
+```
+Conceptually, this protocol involves collecting evidence at place `P1` (via `attest`), then sending that evidence to place `P2` to be appraised (via `appraise`) and finally certified (via `certificate`).  For simplicity, `appraise` and `certificate` are implemented as dummy measurements similar to `attest` that return dummy values "appraise" and "certificate", respectively.
+
+To run this protocol, from `am-cakeml/tests/`, run:
+
+```
+./CI/Test.sh -t cert -s
+```
+
+Notice in the output that the resulting Raw Evidence is a sequence of three values (representing the base64 representations of the "attest", "appraise", and "certificate" strings):
+
+```
+"...PAYLOAD":{"RAWEV":{"RawEv":["Y2VydGlmaWNhdGU=","YXBwcmFpc2U=","YXR0ZXN0"]}...
+```
+
+### attest protocol (standalone AM server)
