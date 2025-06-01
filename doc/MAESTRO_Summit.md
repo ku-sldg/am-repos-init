@@ -116,10 +116,116 @@ Now that the AM server is running and listening for requests, open up a separate
 ```
 make am_client_attest
 ```
+
+If successful, this will show activity in the AM server terminal at 127.0.0.1:5000 and also print protocol results in the client AM terminal.  Successful client output will end with:
+
+```
+ProtocolRunResponse { TYPE: "RESPONSE", ACTION: "RUN", SUCCESS: true, PAYLOAD: Evidence { RAWEV: RawEv(["YXR0ZXN0"]), EVIDENCET: asp_evt("P0", ASP_PARAMS { ASP_ID: "attest", ASP_ARGS: Object {}, ASP_PLC: "P0", ASP_TARG_ID: "sys_targ" }, mt_evt) } }
+```
+
+
 Uner the hood, this make target runs the `rust-am-client` executable (`cargo run --release --bin rust-am-client`) with parameters to specify the client protocol (`-t`), protocol session (`-a`) and AM server where the protocol is sent (`-s`).  In this case, we pass the same protocol and session from `<AM_REPOS_ROOT>/am-cakeml/am_configs/attest/`, and specify `127.0.0.1:5000` as the destination server UUID.
 
-See `<AM_REPOS_ROOT>/rust-am-clients/Makefile` for specific parameters passed to make targets.  For a listing of all command line options for `rust-am-client`, type:  `make am_client_help`.
+See `<AM_REPOS_ROOT>/rust-am-clients/Makefile` for specific parameters passed to client make targets.  For a description of all command line options for `rust-am-client`, type:  `make am_client_help`.
 
 ### cert protocol (local, standalone AM servers)
 
+With the AM server for the `attest` scenario still running, try running the following from the client terminal:
 
+```
+make am_client_cert
+```
+
+Notice that this fails at the AM server soon after the following output:
+
+```
+Trying to connect to server at address:  127.0.0.1:5001 from ...
+```
+
+Recall that the `cert` protocol scenario expects AM servers running at `127.0.0.1:5001` (to run the `attest` ASP), and at `127.0.0.1:5002` (to run the `appraise` and `certificate` ASPs).  When we ran `make am_client_cert`, the AM server at port `127.0.0.1:5000` received the protocol request, but failed in its attempt to reach the (non-existent) AM server at `127.0.0.1:5001`.
+
+To remedy this, open up two new terminals and in each navigate to `<AM_REPOS_ROOT>/am-cakeml/am_configs/`.  In one, run:
+
+```
+./start_am_server.sh -m cert/Manifest_P1.json -u 127.0.0.1:5001
+```
+
+And in the other, run:
+
+```
+./start_am_server.sh -m cert/Manifest_P2.json -u 127.0.0.1:5002
+```
+
+NOTE:  The AM server at port `5000` should still be running, and is sufficiently configured to handle the `cert` protocol (all it needs to know is how to contact Place `P1`, which it receives in the Attestation Session configured by the client AM).
+
+With the three server AMs running at ports `5000`, `5001`, and `5002`, from the client terminal try running again:
+
+```
+make am_client_cert
+```
+
+Successful output looks like:
+
+```
+ProtocolRunResponse { TYPE: "RESPONSE", ACTION: "RUN", SUCCESS: true, PAYLOAD: Evidence { RAWEV: RawEv(["Y2VydGlmaWNhdGU=", "YXBwcmFpc2U=", "YXR0ZXN0"]) ...
+```
+
+### cert protocol + APPR (local, standalone AM servers)
+
+Next, we extend the `cert` protocol to perform automatic appraisal via the Copland APPR primitive.  The new `cert_appr` protocol phrase is as follows:
+
+
+```
+*P0:  
+    @P1 [ <attest P1 sys_targ> ->
+          @P2 [ <appraise P2 sys_targ> ->
+                <certificate P2 sys_targ> ]
+        ] -> 
+    <APPR>
+```
+
+This is identical to the `cert` phrase, but with a trailing `<APPR>` term.  Note that due to scoping, this `<APPR>` happens at place `P0`.  The `<APPR>` primitive is quite powerful and is defined generally over all Copland phrases.  In this specific `cert_appr` phrase, it (the AM at place `P0`) must be prepared to appraise evidence produced by all the ASPs preceding `<APPR>`:  `attest`, `appraise`, `certificate`.  The mechanism to tell `<APPR>` how to appraise evidence produced by specific ASPs is the `Session_Context": "ASP_Comps"` field of the Attestation Session.  For the `cert_appr` scenario, this field is as follows:
+
+```
+"ASP_Comps": {
+    "attest": "magic_appr",
+    "certificate": "magic_appr",
+    "appraise": "magic_appr",
+    ...
+```
+
+`magic_appr` is a "dummy" appraisal ASP that consumes any input evidence and returns an empty evidence value (the empty string "").
+
+Let's now configure and run the `cert_appr` scenario in our local terminals.  In the same terminals as before in the `cert` scenario, run each of the following commands:
+
+```
+./start_am_server.sh -m cert_appr/Manifest_P0.json -u 127.0.0.1:5000
+```
+
+```
+./start_am_server.sh -m cert_appr/Manifest_P1.json -u 127.0.0.1:5001
+```
+
+```
+./start_am_server.sh -m cert_appr/Manifest_P2.json -u 127.0.0.1:5002
+```
+
+And finally, from the client terminal, run:
+
+```
+make am_client_cert_appr
+```
+
+Notice at the beginning of the output, the results of `magic_appr` on each of the pieces of primitive ASP evidence:
+
+```
+ProtocolRunResponse { ... PAYLOAD: Evidence { RAWEV: RawEv(["", "", ""]) ... }
+```
+
+For a more consice "Appraisal Summary", try running the following client make target (same as before but the the `-m` option for Appraisal Summary):
+
+```
+make am_client_cert_appr_appsumm
+```
+
+An Appraisal Summary will walk the Copland evidence structure and look for the "good" evidence value (in this case the empty string "").  The output will end with a pretty-printed Appraisal Summary that prints "PASSED" if appraisal succeeds on each target.
