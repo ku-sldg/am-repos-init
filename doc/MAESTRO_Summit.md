@@ -85,4 +85,41 @@ Notice in the output that the resulting Raw Evidence is a sequence of three valu
 "...PAYLOAD":{"RAWEV":{"RawEv":["Y2VydGlmaWNhdGU=","YXBwcmFpc2U=","YXR0ZXN0"]}...
 ```
 
-### attest protocol (standalone AM server)
+### attest protocol (local, standalone AM server)
+
+We will now revisit the `attest` protocol scenario, but instead of launching the AM server and client from the same terminal, we will configure and run the server executable in a separate (but still local) terminal session.
+
+For convenience, all relevant AM server configuration files can be found in `<AM_REPOS_ROOT>/am-cakeml/am_configs/`.  Each protocol scenario has its own sub-directory there.
+
+To start the AM server for place `P0` in the `attest` scenario, open a new terminal and navigate to `<AM_REPOS_ROOT>/am-cakeml/`.  Then run the following command:
+
+```
+ ./build/bin/attestation_manager -m <AM_REPOS_ROOT>/am-cakeml/am_configs/attest/Manifest_P0.json -u 127.0.0.1:5000 -b <AM_REPOS_ROOT>/asp-libs/target/release/ --comms <AM_REPOS_ROOT>/rust-am-clients/target/release/rust-am-comms-client
+ ```
+
+ NOTE:  There is a convenience script called `start_am_server.sh` in `<AM_REPOS_ROOT>/am-cakeml/am_configs/` that simplifies starting servers.  However it requires first setting the following environment variables (TIP:  add these to your terminal startup script to avoid setting these for each new terminal session):
+
+ ```
+ export AM_ROOT=<AM_REPOS_ROOT>/am-cakeml/ &&
+ export ASP_BIN=<AM_REPOS_ROOT>/asp-libs/target/release/ &&
+ export AM_COMMS_BIN=<AM_REPOS_ROOT>/rust-am-clients/target/release/rust-am-comms-client
+ ```
+
+ With these variables set, the command to start the `attest` AM server from `<AM_REPOS_ROOT>/am-cakeml/am_configs/` becomes:
+
+ ```
+ ./start_am_server.sh -m attest/Manifest_P0.json -u 127.0.0.1:5000
+ ```
+
+Now that the AM server is running and listening for requests, open up a separate terminal and navigate to `<AM_REPOS_ROOT>/rust-am-clients/`.  Then run:
+
+```
+make am_client_attest
+```
+Uner the hood, this make target runs the `rust-am-client` executable (`cargo run --release --bin rust-am-client`) with parameters to specify the client protocol (`-t`), protocol session (`-a`) and AM server where the protocol is sent (`-s`).  In this case, we pass the same protocol and session from `<AM_REPOS_ROOT>/am-cakeml/am_configs/attest/`, and specify `127.0.0.1:5000` as the destination server UUID.
+
+See `<AM_REPOS_ROOT>/rust-am-clients/Makefile` for specific parameters passed to make targets.  For a listing of all command line options for `rust-am-client`, type:  `make am_client_help`.
+
+### cert protocol (local, standalone AM servers)
+
+
