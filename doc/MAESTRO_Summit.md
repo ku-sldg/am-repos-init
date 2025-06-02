@@ -327,3 +327,56 @@ As an exercise, configure and run the following protocol:
 Where the server AMs for places `P0`, `P1`, and `P2` are running on separate machines with distinct IP addresses.
 
 Use the steps for the above `attest_remote` protocol scenario as a guide. HINT: You will need to ensure that 1) The attestation session maps `P1` and `P2` to their remote IPs and 2) the Manifests for the remote AMs minimally include the `attest` ASP_ID.
+
+
+### ASP Client (hashfile ASP)
+
+Up until now, the ASP (Attestation Service Provider) implementations we've dealt with have largely been "dummy" code in the sense that they largely return static, hardcoded strings as evidence.  In particular, they don't return anything specific (or dynamic) about the target platform of interest.  In this section, we'll walk through how to configure and query a new non-dummy (albeit quite simple) ASP called `hashfile` that simply takes a hash of a file on the target's filesystem.
+
+First, try running the Rust ASP Client executable via this (pre-configured) make target:
+
+```sh
+cd $AM_REPOS_ROOT/rust-am-clients/ &&
+make asp_client_hashfile 
+```
+
+Successful output should look something like:
+
+```
+Decoded Attestation ASP_ARGS as:
+Object {"env_var": String(""), "filepath": String("$AM_REPOS_ROOT/am-cakeml/tests/DemoFiles/goldenFiles/goldenFile.txt")}
+
+ASPRunResponse JSON:  
+{"TYPE":"RESPONSE","ACTION":"ASP_RUN","SUCCESS":true,"PAYLOAD":{"RawEv":["9WEMD8GDLrdLaNAwjEi9D104HaoLqH6p/onKPRvPoEI="]}}
+
+```
+
+This make target depends on a JSON file that specifies ASP_ARGS (ASP Arguments) as a JSON Object input for the `hashfile` ASP executable.  This file can be found here:  `$AM_REPOS_ROOT/rust-am-clients/testing/asp_args/hashfile_args.json`.  If the above make target did not succeed (if you see a field like `"SUCCESS":false` in the ASPRunResponse JSON), it's possible that your operating system cannot interpret the environment variable embedded in the JSON ASP_ARGS (while testing, this seems to be the case with MacOS, but other linux distros do fine).  In that case, try manually editing `hashfile_args.json` to use an absolute path.
+
+Once the above ASPRunRequest/Response succeeds, try modifying (don't forget to save!) the target file and re-runing the ASP Client:
+
+```sh
+cd $AM_REPOS_ROOT/am-cakeml/tests/DemoFiles/goldenFiles
+```
+
+```
+...
+<modify goldenFile.txt>
+...
+```
+
+```sh
+cd $AM_REPOS_ROOT/rust-am-clients/ &&
+make asp_client_hashfile 
+
+```
+
+You should notice a new value in the `"PAYLOAD":{"RawEv":[ ... "` field.
+
+To restore the file back to its original contents:
+
+```sh
+git checkout $AM_REPOS_ROOT/am-cakeml/tests/DemoFiles/goldenFiles/goldenFile.txt
+```
+
+### ASP Client (hashfile ASP, concretized ASP_ARGS)
