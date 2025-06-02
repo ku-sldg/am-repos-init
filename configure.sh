@@ -22,14 +22,18 @@ AM_CLIENTS_REPO_URL=https://github.com/ku-sldg/rust-am-clients.git
 AM_CLIENTS_BRANCH=$MAESTRO_BRANCH
 AM_CLIENTS_LOCAL_DIR=$AM_REPOS_ROOT/rust-am-clients
 
+# Make a variable for the script directory
+REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="$REPO_DIR/scripts/"
+
 # clone am-cakeml
-./scripts/clone_branch.sh $AM_CAKEML_REPO_URL $AM_CAKEML_BRANCH "$AM_CAKEML_LOCAL_DIR"
+$SCRIPT_DIR/clone_branch.sh $AM_CAKEML_REPO_URL $AM_CAKEML_BRANCH "$AM_CAKEML_LOCAL_DIR"
 
 # clone asp-libs
-./scripts/clone_branch.sh $ASP_LIBS_REPO_URL $ASP_LIBS_BRANCH "$ASP_LIBS_LOCAL_DIR"
+$SCRIPT_DIR/clone_branch.sh $ASP_LIBS_REPO_URL $ASP_LIBS_BRANCH "$ASP_LIBS_LOCAL_DIR"
 
 # clone rust-am-clients
-./scripts/clone_branch.sh $AM_CLIENTS_REPO_URL $AM_CLIENTS_BRANCH "$AM_CLIENTS_LOCAL_DIR"
+$SCRIPT_DIR/clone_branch.sh $AM_CLIENTS_REPO_URL $AM_CLIENTS_BRANCH "$AM_CLIENTS_LOCAL_DIR"
 
 echo "Trying to build(make) asp-libs repo"
 cd $ASP_LIBS_LOCAL_DIR && make
