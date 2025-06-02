@@ -3,6 +3,7 @@
 ## Steps
 
 1) Copy files from `asp-libs/attacks/targ_files/theorem_demo/` to a path (here, we'll call it `<path_to_theorems_env_root>`)
+1) Locate the am-cakeml repo folder (here, we'll call it `<path_to_am-cakeml>`)
 1) Replace the `coqc` executable with one from your machine 
 1) Concretize attestation ASP_ARGS for provisioning: 
     ```
@@ -23,12 +24,12 @@
 1) Concretize attestation ASP_ARGS for protocol execution:
     ```
     cd rust-am-clients &&
-    python3 scripts/concretize_args.py --infile testing/asp_args/placeholder_args/testing/asp_args/placeholder_args/run_theorem_test_args_abstracted.json --outfile testing/asp_args/concretized_args/testing/asp_args/placeholder_args/run_theorem_test_args_concretized.json --params x=<path_to_theorems_env_root>
+    python3 scripts/concretize_args.py --infile testing/asp_args/placeholder_args/run_theorem_test_args_abstracted.json --outfile testing/asp_args/concretized_args/run_theorem_test_args_concretized.json --params x=<path_to_theorems_env_root>
     ```
 1) Concretize appraisal ASP_ARGS for protocol execution:
     ```
     cd rust-am-clients &&
-    python3 scripts/concretize_args.py --infile testing/asp_args/placeholder_args/testing/asp_args/placeholder_args/run_theorem_test_args_appr_abstracted.json --outfile testing/asp_args/concretized_args/testing/asp_args/placeholder_args/run_theorem_test_args_appr_concretized.json --params x=<path_to_theorems_env_root>
+    python3 scripts/concretize_args.py --infile testing/asp_args/placeholder_args/run_theorem_test_args_appr_abstracted.json --outfile testing/asp_args/concretized_args/run_theorem_test_args_appr_concretized.json --params x=<path_to_am-cakeml>
     ```
 1) Run protocol server:
     ```
