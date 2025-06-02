@@ -18,7 +18,7 @@ Follow the instructions in that repo's [README.md](https://github.com/ku-sldg/am
 
 With the tools installed, we can run some example Copland protocols with the help of MAESTRO and observe their output.
 
-We will assume for the rest of this tutorial that your `AM_REPOS_ROOT` environment variable is set to a path we'll refer to as `<AM_REPOS_ROOT>`, and the MAESTRO repositories are configured as direct sub-directories -- `(am-cakeml/, asp-libs/, rust-am-clients/)` -- per the earlier installation.
+We will assume for the rest of this tutorial that (per the Quick Install) your `AM_REPOS_ROOT` environment variable is set, and the MAESTRO repositories are configured as direct sub-directories -- `(am-cakeml/, asp-libs/, rust-am-clients/)`.
 
 We'll start by running some simple protocols that stay local to one machine. For now, we will group all of the AM (Attestation Manager) servers and AM clients into one tmux session for convenience. Later we will launch server and client AMs independently, and ultimately demonstrate protocols that participate in cross-platform AM-to-AM communications (via TCP/IP).
 
@@ -35,7 +35,7 @@ In summary, this syntax says: "At place `P0`, run the ASP `attest` to measure ta
 To run this protocol (`-t term` indicates the protocol term to run, `-s` indicates to only "send" the protocol, and NOT to do an Appraisal Summary):
 
 ```sh
-cd <AM_REPOS_ROOT>/am-cakeml/tests/ &&
+cd $AM_REPOS_ROOT/am-cakeml/tests/ &&
 ./CI/Test.sh -t attest -s
 ```
 
@@ -54,7 +54,7 @@ Next, navigate to `am-cakeml/tests/DemoFiles/Generated/` to see the various (JSO
 Looking briefly at the fields for the Manifest (`Manifest_P0.json`):
 
 - `"ASPS"` contains a JSON Array of supported ASP_IDs (ASP Identifiers). In this case, it is a singleton array ["attest"].
-- `"ASP_FS_MAP"` contains a JSON object of key/value pairs that maps ASP_IDs to their corresponding executable binary file system locations. When this value is empty, the default path assigned to the binary is <ASP_BIN>/<ASP_ID>, where ASP_BIN is an environment variable pointing to the ASP executables, and <ASP_ID> is the ASP_ID mentioned in the `"ASPS"` field. So in this case, the "attest" ASP_ID would map to an executable at path: `<ASP_BIN>/attest`. For this demo, <ASP_BIN> defaults to: `<AM_REPOS_ROOT>/asp-libs/target/release/`. The implementation for the "attest" binary is a rust source file located at: `<AM_REPOS_ROOT>/asp-libs/executables/attest/src/main.rs`. Its [implementation](https://github.com/ku-sldg/asp-libs/blob/maestro-summit/executables/attest/src/main.rs) is quite simple, returning only "dummy" evidence: the string "attest". The implementation is further simplified by leveraging the Copland-specific library function `handle_body` from the common rust-am-lib repository [here](https://github.com/ku-sldg/rust-am-lib/blob/045e9c65d81761cc09743f487f8053de996050ee/src/copland.rs#L458). We will revisit ASP implementations later in more detail.
+- `"ASP_FS_MAP"` contains a JSON object of key/value pairs that maps ASP_IDs to their corresponding executable binary file system locations. When this value is empty, the default path assigned to the binary is $ASP_BIN/<ASP_ID>, where ASP_BIN is an environment variable pointing to the ASP executables, and <ASP_ID> is the ASP_ID mentioned in the `"ASPS"` field. So in this case, the "attest" ASP_ID would map to an executable at path: `$ASP_BIN/attest`. For this demo, $ASP_BIN defaults to: `$AM_REPOS_ROOT/asp-libs/target/release/`. The implementation for the "attest" binary is a rust source file located at: `$AM_REPOS_ROOT/asp-libs/executables/attest/src/main.rs`. Its [implementation](https://github.com/ku-sldg/asp-libs/blob/maestro-summit/executables/attest/src/main.rs) is quite simple, returning only "dummy" evidence: the string "attest". The implementation is further simplified by leveraging the Copland-specific library function `handle_body` from the common rust-am-lib repository [here](https://github.com/ku-sldg/rust-am-lib/blob/045e9c65d81761cc09743f487f8053de996050ee/src/copland.rs#L458). We will revisit ASP implementations later in more detail.
 - `"Policy"` is related to evidence disclosure, but is left unimplemented for this demo.
 
 Finally, looking at the fields for the Attestation Session (`Full_Session.json`):
@@ -94,29 +94,29 @@ Notice in the output that the resulting Raw Evidence is a sequence of three valu
 
 We will now revisit the `attest` protocol scenario, but instead of launching the AM server and client from the same terminal, we will configure and run the server executable in a separate (but still local) terminal session.
 
-For convenience, all relevant AM server configuration files can be found in `<AM_REPOS_ROOT>/am-cakeml/am_configs/`. Each protocol scenario has its own sub-directory there.
+For convenience, all relevant AM server configuration files can be found in `$AM_REPOS_ROOT/am-cakeml/am_configs/`. Each protocol scenario has its own sub-directory there.
 
-To start the AM server for place `P0` in the `attest` scenario, open a new terminal and navigate to `<AM_REPOS_ROOT>/am-cakeml/`. Then run the following command:
-
-```sh
- ./build/bin/attestation_manager -m <AM_REPOS_ROOT>/am-cakeml/am_configs/attest/Manifest_P0.json -u 127.0.0.1:5000 -b <AM_REPOS_ROOT>/asp-libs/target/release/ --comms <AM_REPOS_ROOT>/rust-am-clients/target/release/rust-am-comms-client
-```
-
-NOTE: There is a convenience script called `start_am_server.sh` in `<AM_REPOS_ROOT>/am-cakeml/am_configs/` that simplifies starting servers. However it requires first setting the following environment variables (TIP: add these to your terminal startup script to avoid setting these for each new terminal session):
+To start the AM server for place `P0` in the `attest` scenario, open a new terminal and navigate to `$AM_REPOS_ROOT/am-cakeml/`. Then run the following command:
 
 ```sh
-export AM_ROOT=<AM_REPOS_ROOT>/am-cakeml/ &&
-export ASP_BIN=<AM_REPOS_ROOT>/asp-libs/target/release/ &&
-export AM_COMMS_BIN=<AM_REPOS_ROOT>/rust-am-clients/target/release/rust-am-comms-client
+ ./build/bin/attestation_manager -m $AM_REPOS_ROOT/am-cakeml/am_configs/attest/Manifest_P0.json -u 127.0.0.1:5000 -b $AM_REPOS_ROOT/asp-libs/target/release/ --comms $AM_REPOS_ROOT/rust-am-clients/target/release/rust-am-comms-client
 ```
 
-With these variables set, the command to start the `attest` AM server from `<AM_REPOS_ROOT>/am-cakeml/am_configs/` becomes:
+NOTE: There is a convenience script called `start_am_server.sh` in `$AM_REPOS_ROOT/am-cakeml/am_configs/` that simplifies starting servers. However it requires first setting the following environment variables (TIP: add these to your terminal startup script to avoid setting these for each new terminal session):
+
+```sh
+export AM_ROOT=$AM_REPOS_ROOT/am-cakeml/ &&
+export ASP_BIN=$AM_REPOS_ROOT/asp-libs/target/release/ &&
+export AM_COMMS_BIN=$AM_REPOS_ROOT/rust-am-clients/target/release/rust-am-comms-client
+```
+
+With these variables set, the command to start the `attest` AM server from `$AM_REPOS_ROOT/am-cakeml/am_configs/` becomes:
 
 ```sh
 ./start_am_server.sh -m attest/Manifest_P0.json -u 127.0.0.1:5000
 ```
 
-Now that the AM server is running and listening for requests, open up a separate terminal and navigate to `<AM_REPOS_ROOT>/rust-am-clients/`. Then run:
+Now that the AM server is running and listening for requests, open up a separate terminal and navigate to `$AM_REPOS_ROOT/rust-am-clients/`. Then run:
 
 ```sh
 make am_client_attest
@@ -128,9 +128,9 @@ If successful, this will show activity in the AM server terminal at 127.0.0.1:50
 ProtocolRunResponse { TYPE: "RESPONSE", ACTION: "RUN", SUCCESS: true, PAYLOAD: Evidence { RAWEV: RawEv(["YXR0ZXN0"]), EVIDENCET: asp_evt("P0", ASP_PARAMS { ASP_ID: "attest", ASP_ARGS: Object {}, ASP_PLC: "P0", ASP_TARG_ID: "sys_targ" }, mt_evt) } }
 ```
 
-Uner the hood, this make target runs the `rust-am-client` executable (`cargo run --release --bin rust-am-client`) with parameters to specify the client protocol (`-t`), protocol session (`-a`) and AM server where the protocol is sent (`-s`). In this case, we pass the same protocol and session from `<AM_REPOS_ROOT>/am-cakeml/am_configs/attest/`, and specify `127.0.0.1:5000` as the destination server UUID.
+Uner the hood, this make target runs the `rust-am-client` executable (`cargo run --release --bin rust-am-client`) with parameters to specify the client protocol (`-t`), protocol session (`-a`) and AM server where the protocol is sent (`-s`). In this case, we pass the same protocol and session from `$AM_REPOS_ROOT/am-cakeml/am_configs/attest/`, and specify `127.0.0.1:5000` as the destination server UUID.
 
-See `<AM_REPOS_ROOT>/rust-am-clients/Makefile` for specific parameters passed to client make targets. For a description of all command line options for `rust-am-client`, type: `make am_client_help`.
+See `$AM_REPOS_ROOT/rust-am-clients/Makefile` for specific parameters passed to client make targets. For a description of all command line options for `rust-am-client`, type: `make am_client_help`.
 
 ### cert protocol (local, standalone AM servers)
 
@@ -148,7 +148,7 @@ Trying to connect to server at address:  127.0.0.1:5001 from ...
 
 Recall that the `cert` protocol scenario expects AM servers running at `127.0.0.1:5001` (to run the `attest` ASP), and at `127.0.0.1:5002` (to run the `appraise` and `certificate` ASPs). When we ran `make am_client_cert`, the AM server at port `127.0.0.1:5000` received the protocol request, but failed in its attempt to reach the (non-existent) AM server at `127.0.0.1:5001`.
 
-To remedy this, open up two new terminals and in each navigate to `<AM_REPOS_ROOT>/am-cakeml/am_configs/`. In one, run:
+To remedy this, open up two new terminals and in each navigate to `$AM_REPOS_ROOT/am-cakeml/am_configs/`. In one, run:
 
 ```sh
 ./start_am_server.sh -m cert/Manifest_P1.json -u 127.0.0.1:5001
@@ -282,7 +282,7 @@ In a separate terminal on the remote machine, determine the machine's IP address
 Back on the local machine, in the client AM terminal, navigate to the client-side attestation sessions and copy the existing session file for `cert_appr` to a new file:
 
 ```sh
-cd <AM_REPOS_ROOT>/rust-am-clients/testing/attestation_sessions/ &&
+cd $AM_REPOS_ROOT/rust-am-clients/testing/attestation_sessions/ &&
 cp session_cert_appr.json session_attest_remote.json
 ```
 
