@@ -230,7 +230,8 @@ make am_client_cert_appr_appsumm
 
 An Appraisal Summary will walk the Copland evidence structure and look for the "good" evidence value (in this case the empty string "").  The output will end with a pretty-printed Appraisal Summary that prints "PASSED" if appraisal succeeds on each target.
 
-PRO TIP:  An alternative strategy for performing appraisal is to delegate appraisal to a dedicated AM server.  This leads to (effectively) running two separate attestation sessions in sequence as follows:
+### Delegated Appraisal (``cert`` + `<APPR>`)
+An alternative strategy for performing appraisal is to delegate appraisal to a dedicated AM server.  This leads to (effectively) running two separate attestation sessions in sequence as follows:
 
 ```
 E <- (*P0[]:  
@@ -251,3 +252,72 @@ make am_client_cert_appr_delegated
 ```
 
 This make target includes additional parameters to indicate the appraisal server AM (`-r`) and appraisal ASP_ARGS (`-d`).  ASP_ARGS provide a way to customize Copland protocols for specific measurement "targets" (we will see examples of this later in this tutorial).  Because the ASPs for `cert` are all "dummy" versions that produce static strings, its ASP_ARGS are simply the empty JSON object (`{}`) (both for its attestation AND appraisal ASPs -- recall that `magic_appr` is also a dummy implementation).
+
+### attest protocol (remote AM servers)
+
+Next, we will run a new version of the attest protocol, called `attest_remote`, that makes a remote request across a machine boundary:
+
+```
+*P0:  @P1 [ <attest  P1  sys_targ> ]
+```
+
+Before running this protocol, we must configure the server AMs for place `P0` and `P1`.  `P0` can remain local, and we can start it with the same configuration as the `cert_appr` protocol:
+
+```
+./start_am_server.sh -m cert_appr/Manifest_P0.json -u 127.0.0.1:5000
+```
+
+To configure `P1`, first switch machines then start the `P1` server as before:
+
+```
+./start_am_server.sh -m cert_appr/Manifest_P1.json -u 127.0.0.1:5001
+```
+
+In a separate terminal on the remote machine, determine the machine's IP address (try the `ifconfig` command line utility or go to network settings).  Record (or copy) the IP address, we will refer to it as `<REMOTE_IP>`.
+
+Back on the local machine, in the client AM terminal, navigate to the client-side attestation sessions and copy the existing session file for `cert_appr` to a new file:
+
+```
+cd <AM_REPOS_ROOT>/rust-am-clients/testing/attestation_sessions/ &&
+cp session_cert_appr.json session_attest_remote.json
+```
+Next, copy and tweak the rust-am-clients make target for `am_client_attest` to point to the new `attest_remote` protocol (found at `testing/protocols/noargs/protocol_attest_remote_noargs.json`) and the newly created session.  The new make target should look something like this:
+
+```
+am_client_attest_remote:
+	cargo run --release --bin rust-am-client -- -t $(PROTOCOLS_DIR)protocol_attest_remote_noargs.json -a $(SESSIONS_DIR)session_attest_remote.json -s 127.0.0.1:5000
+```
+
+NOTE:  the top-level AM server can remain local (`-s`) since the `@P1` portion of the protocol will handle the remote communication.
+
+Finally, edit the new session file to associate place `P1` with the remote machine's IP.  This will amount to replacing one line as follows:
+
+```
+"P1": "127.0.0.1:5001",   
+
+==>
+
+"P1": "<REMOTE_IP>:5001",
+```
+
+With both AM servers running (`P0` locally, `P1` remotely), run the client AM:
+
+```
+make am_client_attest_remote
+```
+
+Assuming firewalls on the remote machine are configured properly, the protocol will run as expected, with activity on both AM servers and one evidence value returned to the client AM.
+
+### Exercise:  multi-node attest protocol (remote AM servers)
+
+As an exercise, configure and run the following protocol:
+
+`attest_remote_multinode` :=
+```
+*P0:  (@P1 [ <attest  P1  sys_targ> ]) +<+
+      (@P2 [ <attest  P2  sys_targ> ])
+```
+
+Where the server AMs for places `P0`, `P1`, and `P2` are running on separate machines with distinct IP addresses.
+
+Use the steps for the above `attest_remote` protocol scenario as a guide.  HINT:  You will need to ensure that 1) The attestation session maps `P1` and `P2` to their remote IPs and 2) the Manifests for the remote AMs minimally include the `attest` ASP_ID.
