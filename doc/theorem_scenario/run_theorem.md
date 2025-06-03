@@ -6,7 +6,7 @@
 1) Locate the am-cakeml repo folder (here, we'll call it `<path_to_am-cakeml>`)
 1) Replace the `coqc` executable with one from your machine. 
    The currently used `coqc` is within `asp-libs/attacks/targ_files/theorem_demo/my_theorems_env/`,
-   which within the copied files should be at `<path_to_theorem_env_root>/my_theorems_env/`.
+   which within the copied files should be at `<path_to_theorems_env_root>/my_theorems_env/`.
    You can find your `coqc` executable using the command:
    ```
    which coqc
