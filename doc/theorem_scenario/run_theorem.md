@@ -4,7 +4,28 @@
 
 1) Copy files from `asp-libs/attacks/targ_files/theorem_demo/` to a path (here, we'll call it `<path_to_theorems_env_root>`)
 1) Locate the am-cakeml repo folder (here, we'll call it `<path_to_am-cakeml>`)
-1) Replace the `coqc` executable with one from your machine 
+1) Replace the `coqc` executable with one from your machine. You can find your `coqc` executable using the command:
+   ```
+   which coqc
+   ```
+
+1) In `asp-libs/executables/goldenevidence_appr/src/main.rs` there currently is a hardcoded path on line 102.
+   Replace the path up to your location of `am-cakeml` and remake using `make` at the root of your `asp-libs` repository.
+   <!-- This is needed before running the protocol server-client. I don't know what other steps this is needed before yet. -->
+
+1) Create the `concretized_args` folder:
+   ```
+   mkdir rust-am-clients/testing/asp_args/concretized_args
+   ```
+   <!-- This is needed before running concretize_args.py at the latest. -->
+   
+1) Create the environment variables `AM-CLIENTS-ROOT` and `AM-ROOT`. `AM-CLIENTS-ROOT` should be set to the root of your `rust-am-clients` repository, and `AM-ROOT` to the root of your `am-cakeml` repository.
+   ```
+   export AM-CLIENTS-ROOT = $(cd rust-am-clients; echo $PWD)
+   export AM-ROOT = $(cd am-cakeml; echo $PWD)
+   ```
+   <!-- This is needed before running provisioning at the latest. -->
+ 
 1) Concretize attestation ASP_ARGS for provisioning: 
     ```
     cd rust-am-clients &&
@@ -15,6 +36,7 @@
     cd am-cakeml/tests/ &&
     make demo_theorem_provision_noclient
     ```
+    
 1) Run provisioning client (in a separate terminal!):
     ```
     cd rust-am-clients/ &&
@@ -36,6 +58,7 @@
     cd am-cakeml/tests/ &&
     make demo_theorem_noclient
     ```
+    
 1) Run protocol client (in a separate terminal!):
     ```
     cd rust-am-clients/ &&
