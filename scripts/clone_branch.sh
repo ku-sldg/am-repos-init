@@ -18,7 +18,7 @@ if [ -d "$local_dir" ]; then
 else
 
   # Clone the specific branch
-  git clone -b "$branch_name" --single-branch "$repo_url" "$local_dir"
+  git clone -b "$branch_name" "$repo_url" "$local_dir"
 
   # Check if the clone was successful
   if [ $? -eq 0 ]; then
