@@ -22,10 +22,10 @@
    ```
    <!-- This is needed before running concretize_args.py at the latest. -->
    
-1) Create the environment variables `AM-CLIENTS-ROOT` and `AM-ROOT`. `AM-CLIENTS-ROOT` should be set to the root of your `rust-am-clients` repository, and `AM-ROOT` to the root of your `am-cakeml` repository.
+1) Create the environment variables `AM_CLIENTS_ROOT` and `AM_ROOT`. `AM_CLIENTS_ROOT` should be set to the root of your `rust-am-clients` repository, and `AM_ROOT` to the root of your `am-cakeml` repository.
    ```
-   export AM-CLIENTS-ROOT = $(cd rust-am-clients; echo $PWD)
-   export AM-ROOT = $(cd am-cakeml; echo $PWD)
+   export AM_CLIENTS_ROOT = $(cd rust-am-clients; echo $PWD)
+   export AM_ROOT = $(cd am-cakeml; echo $PWD)
    ```
    <!-- This is needed before running provisioning at the latest. -->
  
