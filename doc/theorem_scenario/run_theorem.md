@@ -44,7 +44,7 @@ These steps will assume you've completed the installation steps from above, and 
     ```
 1) Create a directory called `concretized_args` at the following path(the files added here will be specific to your machine, and thus excluded from git history automatically via the .gitignore):
     ```sh
-    mkdir $AM_REPOS_ROOT/rust-am-clients/testing/asp-args/concretized_args
+    mkdir $AM_REPOS_ROOT/rust-am-clients/testing/asp_args/concretized_args
     ```
 
 1) Create the environment variables `AM_CLIENTS_ROOT` and `AM_ROOT`. `AM_CLIENTS_ROOT` should be set to the root of your `rust-am-clients` repository, and `AM_ROOT` to the root of your `am-cakeml` repository.
