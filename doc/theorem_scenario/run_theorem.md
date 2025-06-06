@@ -58,7 +58,7 @@ These steps will assume you've completed the installation steps from above, and 
     cd $AM_REPOS_ROOT/rust-am-clients &&
     python3 scripts/concretize_args.py --infile testing/asp_args/placeholder_args/run_theorem_test_provision_args_abstracted.json --outfile testing/asp_args/concretized_args/run_theorem_test_provision_args_concretized.json --params x=$THEOREM_DEMO_ROOT
     ```
-1) Run provisioning server:
+1) Run provisioning server (NOTE:  This will start a `tmux` terminal session with the necessary Attestation Manager server running.  To kill all servers, type `tmux kill-server` in any of the tmux windows).
     ```sh
     cd $AM_REPOS_ROOT/am-cakeml/tests/ &&
     make demo_theorem_provision_noclient
