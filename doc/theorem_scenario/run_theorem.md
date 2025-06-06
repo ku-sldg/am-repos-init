@@ -11,7 +11,7 @@ IMORTANT:  During that setup, make sure to clone the `theorem-scenario` branch f
 ```
 ```sh
     cd am-repos-init &&
-    ./configure -b theorem-scenario
+    ./configure.sh -b theorem-scenario
 ```
 
 The `-b` option tells ./configure to check out the `theorem-scenario` branch for each repo.
