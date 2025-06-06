@@ -63,8 +63,9 @@ These steps will assume you've completed the installation steps from above, and 
     cd $AM_REPOS_ROOT/am-cakeml/tests/ &&
     make demo_theorem_provision_noclient
     ```
-1) In a separate terminal, run the provisioning client:
+1) In a separate terminal (NOTE: you will need to set the `$AM_REPOS_ROOT` environment variable in this new terminal), run the provisioning client:
     ```sh
+    export AM_REPOS_ROOT=<path-to-am_repos_root> &&
     cd $AM_REPOS_ROOT/rust-am-clients/ &&
     make am_client_run_theorem_test_provision
     ```
