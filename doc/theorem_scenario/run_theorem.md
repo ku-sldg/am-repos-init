@@ -63,9 +63,15 @@ These steps will assume you've completed the installation steps from above, and 
     cd $AM_REPOS_ROOT/am-cakeml/tests/ &&
     make demo_theorem_provision_noclient
     ```
-1) In a separate terminal (NOTE: you will need to set the `$AM_REPOS_ROOT` environment variable in this new terminal), run the provisioning client:
+1) Open a separate terminal window (now for the client), export necessary environment variables:
     ```sh
     export AM_REPOS_ROOT=<path-to-am_repos_root> &&
+    export AM_CLIENTS_ROOT = $AM_REPOS_ROOT/rust-am-clients &&
+    export AM_ROOT = $AM_REPOS_ROOT/am-cakeml
+    ```
+   
+1) In the new terminal, now run the provisioning client:
+    ```sh
     cd $AM_REPOS_ROOT/rust-am-clients/ &&
     make am_client_run_theorem_test_provision
     ```
@@ -77,7 +83,7 @@ These steps will assume you've completed the installation steps from above, and 
     ```
 1) Concretize appraisal ASP_ARGS for protocol execution:
     ```sh
-    cd rust-am-clients &&
+    cd $AM_REPOS_ROOT/rust-am-clients &&
     python3 scripts/concretize_args.py --infile testing/asp_args/placeholder_args/run_theorem_test_args_appr_abstracted.json --outfile testing/asp_args/concretized_args/run_theorem_test_args_appr_concretized.json --params x=$AM_ROOT
     ```
 1) Run protocol server:
