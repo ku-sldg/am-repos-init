@@ -49,8 +49,8 @@ These steps will assume you've completed the installation steps from above, and 
 
 1) Create the environment variables `AM_CLIENTS_ROOT` and `AM_ROOT`. `AM_CLIENTS_ROOT` should be set to the root of your `rust-am-clients` repository, and `AM_ROOT` to the root of your `am-cakeml` repository.
    ```sh
-   export AM_CLIENTS_ROOT = $AM_REPOS_ROOT/rust-am-clients &&
-   export AM_ROOT = $AM_REPOS_ROOT/am-cakeml
+   export AM_CLIENTS_ROOT=$AM_REPOS_ROOT/rust-am-clients &&
+   export AM_ROOT=$AM_REPOS_ROOT/am-cakeml
    ```
 
 1) Concretize attestation ASP_ARGS for provisioning: 
@@ -66,8 +66,8 @@ These steps will assume you've completed the installation steps from above, and 
 1) Open a separate terminal window (now for the client), export necessary environment variables:
     ```sh
     export AM_REPOS_ROOT=<path-to-am_repos_root> &&
-    export AM_CLIENTS_ROOT = $AM_REPOS_ROOT/rust-am-clients &&
-    export AM_ROOT = $AM_REPOS_ROOT/am-cakeml
+    export AM_CLIENTS_ROOT=$AM_REPOS_ROOT/rust-am-clients &&
+    export AM_ROOT=$AM_REPOS_ROOT/am-cakeml
     ```
    
 1) In the new terminal, now run the provisioning client:
