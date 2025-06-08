@@ -14,7 +14,7 @@ Steps:
 
 1. Clone this repository and make sure you have switched to the correct branch `git clone am-repos-init` and `git switch <branch-you-need>`
 
-1. Create a new directory (referred to below as `<path-to-am_repos_root>`). This will serve as a common directory path at which various github repository dependencies will be cloned.
+1. Create a new directory -- independent of the am-repos-init folder (referred to below as `<path-to-am_repos_root>`). This will serve as a common directory path at which various github repository dependencies will be cloned.
 1. Set the `AM_REPOS_ROOT` environment variable to point to that newly-created directory:
    ```sh
        export AM_REPOS_ROOT=<path-to-am_repos_root>
