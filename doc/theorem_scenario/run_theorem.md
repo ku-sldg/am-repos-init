@@ -2,25 +2,37 @@
 
 ## Installation
 
-Follow the steps [here](https://github.com/ku-sldg/am-repos-init/blob/theorem-scenario/README.md) for installing and building the necessary MAESTRO repos.
-
-IMORTANT:  During that setup, make sure to clone the `theorem-scenario` branch for all repos (including this am-repos-init repo), e.g.:
+Follow the steps at the link below for installing and building the necessary MAESTRO repos (**IMPORTANT**:  During that setup, make sure to clone the `theorem-scenario` branch for all repos (including this am-repos-init repo), e.g.:
 
 ```sh
-    git clone -b theorem-scenario https://github.com/ku-sldg/am-repos-init.git
+git clone -b theorem-scenario https://github.com/ku-sldg/am-repos-init.git
 ```
 ```sh
-    cd am-repos-init &&
-    ./configure.sh -b theorem-scenario
+cd am-repos-init &&
+./configure.sh -b theorem-scenario
 ```
 
-The `-b` option tells ./configure to check out the `theorem-scenario` branch for each repo.
+The `-b` option tells our `./configure` script to check out the `theorem-scenario` branch for each MAESTRO repo.
 
+Ok, here's the link:  [MAESTRO Repos Quick Install](https://github.com/ku-sldg/am-repos-init/blob/theorem-scenario/README.md).
 
+## Theorem Attestation Scenario (Description)
 
-## Steps to run Theorem Scenario attestation
+The goal of the Theorem Attestation Scenario is to use the MAESTRO toolchain to provision, gather, and appraise Copland evidence bundles that bolster confidence in outputs of theorem proving tools.  In this document we walk through an example that is tailored to the Coq theorem prover, but we intend to generalize this mechanism to other provers in the near future.  
 
-These steps will assume you've completed the installation steps from above, and thus have the $AM_REPOS_ROOT environment variable set to a common root directory above the MAESTRO repositories (am-cakeml, asp-libs, rust-am-clients).
+## Steps to configure and run Theorem Attestation Scenario
+
+These steps will assume you've completed the [Installation](#Installation) steps from above, and thus have the `$AM_REPOS_ROOT` environment variable set to a common root directory above the MAESTRO repositories (am-cakeml, asp-libs, rust-am-clients).
+
+1) Set a handful of additional environment variables:
+
+    ```sh
+    export AM_CLIENTS_ROOT=$AM_REPOS_ROOT/rust-am-clients &&
+    export AM_ROOT=$AM_REPOS_ROOT/am-cakeml &&
+    export ASP_BIN=$AM_REPOS_ROOT/asp-libs
+    ```
+
+    RECOMMENDED:  For maximum convenience (to avoid re-setting these across different terminal sessions) add these exports to your global .bashrc file (or equivalent for your platform).
 
 1) Create a new directory (we'll call it `$THEOREM_DEMO_ROOT`), and copy to it all files (and directories) from `$AM_REPOS_ROOT/asp-libs/attacks/targ_files/theorem_demo/` 
 
@@ -30,17 +42,18 @@ These steps will assume you've completed the installation steps from above, and 
 
     ```
 
-    HINT:  set `$THEOREM_DEMO_ROOT` as an environment variable to allow copy/paste of later commands in this document:
+    RECOMMENDED:  Set `$THEOREM_DEMO_ROOT` as an environment variable to allow copy/paste of later commands in this document:
 
     ```sh
-    export THEOREM_DEMO_ROOT=<my_theorem_demo_path>
+    export THEOREM_DEMO_ROOT=<path-to-my_theorem_demo>/my_theorem_demo/
     ```
 
 
-1) If you have Coq installed on your system, Locate your `coqc` executable file (`which coqc`), otherwise first install it [here](https://rocq-prover.org/install).
+1) If you have Coq installed on your system, locate your `coqc` executable file (`which coqc`), otherwise first install it.  For maximum stability, we recommend following the steps [here](https://github.com/ku-sldg/copland-avm?tab=readme-ov-file#build-instructions) to install a particular [fork+branch](https://github.com/ku-sldg/coq/tree/cakeml-extraction) of Coq we have tested against the Coq source files used in this demo.
+
 1) Move the `coqc` executable to `$THEOREM_DEMO_ROOT/my_theorems_env/` :
     ```sh
-    cp coqc $THEOREM_DEMO_ROOT/my_theorems_env/
+    cp <your-path-to-coqc>/coqc $THEOREM_DEMO_ROOT/my_theorems_env/
     ```
 1) Create a directory called `concretized_args` at the following path(the files added here will be specific to your machine, and thus excluded from git history automatically via the .gitignore):
     ```sh
