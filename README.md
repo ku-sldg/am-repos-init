@@ -21,7 +21,7 @@ Steps:
    ```
 1. Run the `configure.sh` script:
    ```sh
-       sh ./configure.sh
+       sh ./configure.sh [-b <branch-name>]
    ```
    This will clone specific branches of 3 repositories (am-cakeml, asp-libs rust-am-clients) from the [ku-sldg](https://github.com/orgs/ku-sldg/repositories) github repositories and place them at `$AM_REPOS_ROOT/(am-cakeml, asp-libs rust-am-clients)`. It will also attempt to build asp-libs and rust-am-clients automatically -- these should succeed given a good Rust/cargo environment is present.
 1. Navigate to `$AM_REPOS_ROOT/am-cakeml/` and follow the instructions in `README.md` to manually install the am-cakeml tools (and their dependencies).

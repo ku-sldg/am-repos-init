@@ -22,11 +22,20 @@ The goal of the Theorem Attestation Scenario is to use the MAESTRO toolchain to 
 
 ## Steps to configure and run Theorem Attestation Scenario
 
-These steps will assume you've completed the [Installation](#Installation) steps from above, and thus have the `$AM_REPOS_ROOT` environment variable set to a common root directory above the MAESTRO repositories (am-cakeml, asp-libs, rust-am-clients).
+These steps will assume you've completed the [Installation](#Installation) steps from above, and thus have cloned and built the MAESTRO github repositories at the following directory structure: 
+
+```sh
+<path-to-am_repos_root>/
+
+    -- am-cakeml/
+    -- asp-libs/
+    -- rust-am-clients/
+```
 
 1) Set a handful of additional environment variables:
 
     ```sh
+    export AM_REPOS_ROOT=<path-to-am_repos_root> &&
     export AM_CLIENTS_ROOT=$AM_REPOS_ROOT/rust-am-clients &&
     export AM_ROOT=$AM_REPOS_ROOT/am-cakeml &&
     export ASP_BIN=$AM_REPOS_ROOT/asp-libs
