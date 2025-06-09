@@ -92,7 +92,7 @@ These steps will assume you've completed the [Installation](#Installation) steps
     make am_client_run_theorem_test_provision
     ```
     You can safely ignore any "Appraisal Summary" output for provisioning.
-1) Concretize attestation ASP_ARGS for protocol execution:
+1) Concretize attestation ASP_ARGS for protocol execution (IMPORTANT: make sure you run this in a terminal with `$THEOREM_DEMO_ROOT` set!):
     ```sh
     cd $AM_REPOS_ROOT/rust-am-clients &&
     python3 scripts/concretize_args.py --infile testing/asp_args/placeholder_args/run_theorem_test_args_abstracted.json --outfile testing/asp_args/concretized_args/run_theorem_test_args_concretized.json --params x=$THEOREM_DEMO_ROOT
