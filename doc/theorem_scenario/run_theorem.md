@@ -84,6 +84,7 @@ These steps will assume you've completed the [Installation](#Installation) steps
     export AM_REPOS_ROOT=<path-to-am_repos_root> &&
     export AM_CLIENTS_ROOT=$AM_REPOS_ROOT/rust-am-clients &&
     export AM_ROOT=$AM_REPOS_ROOT/am-cakeml
+    export THEOREM_DEMO_ROOT=<path-to-my_theorem_demo>/my_theorem_demo/
     ```
    
 1) In the new terminal, now run the provisioning client:
