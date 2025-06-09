@@ -18,7 +18,11 @@ Ok, here's the link:  [MAESTRO Repos Quick Install](https://github.com/ku-sldg/a
 
 ## Theorem Attestation Scenario (Description)
 
-The goal of the Theorem Attestation Scenario is to use the MAESTRO toolchain to provision, gather, and appraise Copland evidence bundles that bolster confidence in outputs of theorem proving tools.  In this document we walk through an example that is tailored to the Coq theorem prover, but we intend to generalize this mechanism to other provers in the near future.  
+The goal of the Theorem Attestation Scenario is to use the MAESTRO toolchain to provision, gather, and appraise Copland evidence bundles that bolster confidence in outputs of theorem proving tools.  In this document we walk through an example that is tailored to the Coq theorem prover, but we intend to generalize this mechanism to other provers in the near future.
+
+This scenario consists of two Coq source files (with extension .v) called ImportantTheorem.v and ImportantTheoremTest.v.  ImportantTheorem.v states and proves an "important" simple property about boolean AND (`andb true true = true` in Coq).  ImportantTheoremTest.v is a "test harness" for this theorem.  It checks that 1) the theorem has the correct type (it proves the intended theorem) and 2) the proof of the theorem does not introduce and Axioms.  
+
+The attestation protocol will A) attest to the environment these proofs were run in (check for a legitimate `coqc` executable and `ImportantTheoremTest.v` source file) and B) utilize the Coq compiler (`coqc`) to compile both .v source files and observe their output.  A provisioning protocol allows us to establish a golden evidence tree with "expected values" for steps A) and B) in the protocol.  This provisioned evidence is used during appraisal to make judgements about the target (`ImportantTheorem.v`) and its environment (`coqc` and `ImportantTheoremTest.v`).
 
 ## Steps to configure and run Theorem Attestation Scenario
 
