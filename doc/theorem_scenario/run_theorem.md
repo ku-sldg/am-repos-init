@@ -102,12 +102,12 @@ These steps will assume you've completed the [Installation](#Installation) steps
     cd $AM_REPOS_ROOT/rust-am-clients &&
     python3 scripts/concretize_args.py --infile testing/asp_args/placeholder_args/run_theorem_test_args_appr_abstracted.json --outfile testing/asp_args/concretized_args/run_theorem_test_args_appr_concretized.json --params x=$AM_ROOT
     ```
-1) Run protocol server:
+1) Run protocol server (if the provisioning server is still running, type `tmux kill-server` anywhere in a tmux window):
     ```sh
     cd $AM_REPOS_ROOT/am-cakeml/tests/ &&
     make demo_theorem_noclient
     ```
-1) In a separate terminal, run protocol client:
+1) In the client terminal, run the protocol client:
     ```sh
     cd $AM_REPOS_ROOT/rust-am-clients/ &&
     make am_client_run_theorem_test
