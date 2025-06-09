@@ -69,12 +69,6 @@ These steps will assume you've completed the [Installation](#Installation) steps
     mkdir $AM_REPOS_ROOT/rust-am-clients/testing/asp_args/concretized_args
     ```
 
-1) Create the environment variables `AM_CLIENTS_ROOT` and `AM_ROOT`. `AM_CLIENTS_ROOT` should be set to the root of your `rust-am-clients` repository, and `AM_ROOT` to the root of your `am-cakeml` repository.
-   ```sh
-   export AM_CLIENTS_ROOT=$AM_REPOS_ROOT/rust-am-clients &&
-   export AM_ROOT=$AM_REPOS_ROOT/am-cakeml
-   ```
-
 1) Concretize attestation ASP_ARGS for provisioning: 
     ```sh
     cd $AM_REPOS_ROOT/rust-am-clients &&
