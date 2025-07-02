@@ -42,7 +42,7 @@ These steps will assume you've completed the [Installation](#Installation) steps
     export AM_REPOS_ROOT=<path-to-am_repos_root> &&
     export AM_CLIENTS_ROOT=$AM_REPOS_ROOT/rust-am-clients &&
     export AM_ROOT=$AM_REPOS_ROOT/am-cakeml &&
-    export ASP_BIN=$AM_REPOS_ROOT/asp-libs
+    export ASP_BIN=$AM_REPOS_ROOT/asp-libs/target/release
     ```
 
     RECOMMENDED:  For maximum convenience (to avoid re-setting these across different terminal sessions) add these exports to your global .bashrc file (or equivalent for your platform).
